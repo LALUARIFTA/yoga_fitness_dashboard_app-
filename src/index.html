@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoga & Fitness Interactive Dashboard</title>
+  <meta name="description" content="Dashboard yoga dan kebugaran interaktif dengan jadwal, latihan, nutrisi, dan target bulanan." />
+  <link rel="icon" href="./assets/images/lotus.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./assets/css/dashboard.css" />
+  <script src="./assets/js/dashboard.js" defer></script>
+</head>
+<body>
+
+  <!-- MAIN FIXED DASHBOARD CONTAINER -->
+  <div class="app-frame">
+
+    <!-- ========================================== -->
+    <!-- 1. LEFT SIDEBAR (EMERALD GREEN)            -->
+    <!-- ========================================== -->
+    <aside class="app-navigation bg-brand-sidebar h-full flex flex-col justify-between py-7 select-none relative z-20">
+      <div>
+        <!-- Brand Logo: Lotus + Yoga -->
+        <button type="button" aria-label="Buka dashboard" class="flex flex-col items-center justify-center w-full mb-12 px-2 group max-[860px]:hidden" onclick="switchMenu('dashboard', 0)">
+          <svg class="w-14 h-11 text-white transition-transform duration-300 group-hover:scale-110" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Center Lotus Petal -->
+            <path d="M32 6C26 15 25 27 32 36C39 27 38 15 32 6Z" />
+            <!-- Inner Left Petal -->
+            <path d="M32 36C22 33 17 22 21 12C25 16 27 23 32 36Z" />
+            <!-- Inner Right Petal -->
+            <path d="M32 36C42 33 47 22 43 12C39 16 37 23 32 36Z" />
+            <!-- Outer Left Petal -->
+            <path d="M32 36C18 36 10 29 9 19C16 20 22 26 32 36Z" />
+            <!-- Outer Right Petal -->
+            <path d="M32 36C46 36 54 29 55 19C48 20 42 26 32 36Z" />
+            <!-- Base Leaves -->
+            <path d="M32 36C21 39 11 37 6 31C14 31 22 33 32 36Z" />
+            <path d="M32 36C43 39 53 37 58 31C50 31 42 33 32 36Z" />
+          </svg>
+          <span class="text-white font-semibold text-[18px] tracking-wide mt-0.5">Yoga</span>
+        </button>
+
+        <!-- Navigation Menu List -->
+        <nav class="relative" id="sidebar-nav" aria-label="Menu utama">
+          <!-- Animated White Pill Indicator with Curved Cutouts -->
+          <div id="nav-indicator" class="nav-indicator" style="transform: translateY(0px);"></div>
+
+          <!-- 0: Dashboard -->
+          <button class="nav-btn active" data-menu="dashboard" aria-current="page" onclick="switchMenu('dashboard', 0)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </button>
+
+          <!-- 1: Schedule -->
+          <button class="nav-btn" data-menu="schedule" onclick="switchMenu('schedule', 1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <path d="M9 16l2 2 4-4"></path>
+            </svg>
+            <span>Schedule</span>
+          </button>
+
+          <!-- 2: Yoga -->
+          <button class="nav-btn" data-menu="yoga" onclick="switchMenu('yoga', 2)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 4C9.5 8 9 13 12 17C15 13 14.5 8 12 4Z"></path>
+              <path d="M12 17C7.5 15.5 5 11 6.5 6.5C8.5 8.5 9.5 11.5 12 17Z"></path>
+              <path d="M12 17C16.5 15.5 19 11 17.5 6.5C15.5 8.5 14.5 11.5 12 17Z"></path>
+              <path d="M5 17C8 18.5 16 18.5 19 17"></path>
+            </svg>
+            <span>Yoga</span>
+          </button>
+
+          <!-- 3: Meals -->
+          <button class="nav-btn" data-menu="meals" onclick="switchMenu('meals', 3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 14h18a8 8 0 0 1-8 8H11a8 8 0 0 1-8-8Z"></path>
+              <path d="M7 10c0-1.5 1.5-2.5 3-2.5"></path>
+              <path d="M12 7c0-1.5 1.5-2.5 3-2.5"></path>
+            </svg>
+            <span>Meals</span>
+          </button>
+
+          <!-- 4: Chat -->
+          <button class="nav-btn" data-menu="chat" onclick="switchMenu('chat', 4)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <circle cx="9.5" cy="10" r="1" fill="currentColor"></circle>
+              <circle cx="14.5" cy="10" r="1" fill="currentColor"></circle>
+            </svg>
+            <span>Chat</span>
+            <span id="chat-unread-pill" class="ml-auto mr-3 bg-white text-brand-sidebar text-[10px] font-bold px-1.5 py-0.2 rounded-full shadow-sm max-[860px]:hidden">2</span>
+          </button>
+
+          <!-- 5: Profile -->
+          <button class="nav-btn" data-menu="profile" onclick="switchMenu('profile', 5)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Profile</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom Live Status Pill inside Left Sidebar -->
+      <div class="px-3 max-[860px]:hidden">
+        <div class="bg-white/15 backdrop-blur-sm rounded-2xl p-2.5 text-white text-[11px] flex items-center gap-2 border border-white/15 cursor-pointer hover:bg-white/25 transition" onclick="switchMenu('yoga', 2)">
+          <span class="w-2 h-2 rounded-full bg-emerald-200 animate-ping"></span>
+          <div class="leading-tight">
+            <div class="font-semibold text-[11px]">Flow Ready</div>
+            <div class="text-[9.5px] text-white/80">6 Menus Active</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========================================== -->
+    <!-- 2. CENTER MAIN VIEWPORT (FIXED HEIGHT,     -->
+    <!--    INTERNAL SCROLL FOR LONG SUBMENUS)      -->
+    <!-- ========================================== -->
+    <main id="center-viewport" class="custom-scroll h-full min-w-0 px-8 py-7 bg-brand-offWhite relative z-10">
+
+      <!-- TOP HEADER BAR (Shared across menus, updates title dynamically) -->
+      <header class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <h1 id="main-header-title" class="text-[20px] font-bold text-brand-navy tracking-tight">Dashboard</h1>
+          <span id="menu-badge-pill" class="hidden max-[640px]:hidden text-[11px] font-medium bg-emerald-100 text-brand-sidebar px-2.5 py-0.5 rounded-full">Scrollable View</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <span class="text-[12px] text-slate-400 font-normal tracking-wide hidden sm:inline">15 Nov 2019, Friday</span>
+          <!-- Expandable Search Input -->
+          <div id="search-box-wrap" class="flex items-center bg-[#d7f2e3]/60 rounded-xl overflow-hidden transition-all duration-300 w-9 h-9 justify-end">
+            <input
+              id="global-search-input"
+              type="text"
+              aria-label="Cari pose, menu, atau jadwal"
+              disabled
+              placeholder="Cari pose, menu, jadwal..."
+              class="bg-transparent text-xs text-brand-navy placeholder-brand-sidebar/70 px-3 py-1.5 outline-none w-0 opacity-0 transition-all duration-300"
+              oninput="handleGlobalSearch(this.value)"
+            />
+            <button
+              id="search-toggle"
+              onclick="toggleSearchBox()"
+              aria-label="Cari"
+              aria-expanded="false"
+              aria-controls="global-search-input"
+              class="w-9 h-9 rounded-xl bg-[#d5f1e1] hover:bg-[#c2ebd4] text-brand-sidebar flex items-center justify-center shrink-0 transition"
+            >
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===================================================== -->
+      <!-- MENU 1: DASHBOARD (EXACT REFERENCE + SCROLL CONTENT)  -->
+      <!-- ===================================================== -->
+      <section id="section-dashboard" class="menu-section active-section space-y-6 pb-6">
+
+        <!-- 1. HERO GREETING BANNER WITH EXTENDING YOGA ILLUSTRATION -->
+        <div class="stagger-card stagger-1 relative bg-[#d3f0df] rounded-[18px] h-[126px] px-8 max-[480px]:px-5 flex items-center justify-between overflow-visible mt-4">
+          <!-- Left Text -->
+          <div class="z-10">
+            <h2 class="text-[19px] font-bold text-brand-navy mb-1.5">Hello Jane</h2>
+            <p class="text-[13px] font-medium text-[#54b87e]">Today it's great day to be fit!</p>
+          </div>
+
+          <!-- Decorative Darker Mint Organic Wave on Right Side of Banner -->
+          <div class="absolute inset-0 rounded-[18px] overflow-hidden pointer-events-none">
+            <svg class="absolute right-0 bottom-0 h-full w-[260px]" viewBox="0 0 260 126" fill="none">
+              <path d="M95 126C105 98 165 108 195 72C215 48 212 18 214 0H260V126H95Z" fill="#bce6cd" opacity="0.72"/>
+            </svg>
+          </div>
+
+          <!-- Right Woman Yoga Pose SVG (Extends above the top edge of card like reference) -->
+          <div class="relative z-20 mr-10 -mt-9 pointer-events-none select-none max-[480px]:mr-0" aria-hidden="true">
+            <svg class="w-[185px] h-[165px] max-[480px]:w-28 max-[480px]:h-28 yoga-pose-svg" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Ground subtle shadow -->
+              <ellipse cx="105" cy="166" rx="68" ry="4" fill="#a8dec0" opacity="0.65" />
+
+              <!-- Back Arm Reaching Up High (Left-Up Diagonal) -->
+              <path d="M93 64 C77 45, 58 26, 40 10 L35 6 L33 9 L42 18 C57 34, 72 52, 86 70 Z" fill="#f3b69b"/>
+
+              <!-- Flowing Ponytail Hair -->
+              <path d="M77 56 C66 62, 63 78, 66 95 C68 103, 71 108, 72 114 C75 102, 74 84, 79 67 Z" fill="#6b3e2e"/>
+              <circle cx="80" cy="54" r="3.5" fill="#44b874"/>
+
+              <!-- Head & Neck -->
+              <g transform="rotate(-24 88 52)">
+                <ellipse cx="88" cy="51" rx="8.5" ry="10" fill="#f3b69b"/>
+                <!-- Hair Cap -->
+                <path d="M80 51 C80 43, 89 40, 95 45 C92 43, 84 46, 81 54 Z" fill="#6b3e2e"/>
+              </g>
+
+              <!-- Right Arm Reaching Down Toward Back Leg -->
+              <path d="M104 72 C116 84, 127 95, 138 106 L133 109 C121 98, 111 88, 99 77 Z" fill="#f3b69b"/>
+
+              <!-- Green Tank Top Torso -->
+              <path d="M86 65 C94 61, 102 65, 109 75 L125 99 C116 105, 105 107, 98 102 L83 75 C82 70, 83 67, 86 65 Z" fill="#39b56e"/>
+
+              <!-- Left Straight Leg (Stretching Left) -->
+              <path d="M99 100 L54 155 L61 159 L114 106 Z" fill="#2d3e66"/>
+              <!-- Left Foot -->
+              <path d="M54 155 L46 163 C45 164, 47 166, 51 165 L61 159 Z" fill="#f3b69b"/>
+
+              <!-- Right Bent Lunge Leg (Stretching Right) -->
+              <path d="M107 98 L156 115 C161 117, 163 121, 163 127 L164 156 L156 156 L151 126 L101 108 Z" fill="#253459"/>
+              <!-- Right Foot -->
+              <path d="M156 156 L171 161 C173 162, 172 164, 168 164 L155 161 Z" fill="#f3b69b"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 2. MIDDLE ROW: YOGA ACTIVITY (LEFT) & MEAL STATISTIC (RIGHT) -->
+        <div class="grid grid-cols-12 gap-6">
+
+          <!-- LEFT CARD: YOGA ACTIVITY (7 Columns) -->
+          <div class="stagger-card stagger-2 col-span-12 lg:col-span-7 bg-white rounded-[20px] p-6 shadow-[0_10px_30px_-12px_rgba(27,34,70,0.06)] flex flex-col justify-between">
+            <!-- Card Header -->
+            <div class="flex items-center justify-between mb-5">
+              <h3 class="text-[15px] font-bold text-brand-navy">Yoga Activity</h3>
+              <div class="relative">
+                <select
+                  id="activity-period-select"
+                  onchange="updateYogaActivityBars(this.value)"
+                  class="appearance-none bg-transparent pr-5 text-[12px] text-slate-400 font-medium cursor-pointer outline-none hover:text-brand-navy transition"
+                >
+                  <option value="last_week">Last week</option>
+                  <option value="this_week">This week</option>
+                  <option value="last_month">Last month</option>
+                </select>
+                <svg class="w-3.5 h-3.5 text-slate-400 absolute right-0 top-1 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+
+            <!-- 7 Vertical Pill Columns (Mon - Sun) -->
+            <div id="yoga-bars-container" class="grid grid-cols-7 gap-2 pt-1 pb-4">
+              <!-- Populated and animated via JS -->
+            </div>
+
+            <!-- Bottom Legend -->
+            <div class="flex items-center justify-between px-2 pt-2 border-t border-slate-50 text-[11.5px] font-medium text-brand-navy">
+              <div class="flex items-center gap-2 cursor-pointer hover:opacity-75" onclick="highlightActivitySeries('yoga')">
+                <span class="w-2 h-2 rounded-full bg-brand-sidebar inline-block"></span>
+                <span>Yoga</span>
+              </div>
+              <div class="flex items-center gap-2 cursor-pointer hover:opacity-75" onclick="highlightActivitySeries('rest')">
+                <span class="w-2 h-2 rounded-full bg-brand-navy inline-block"></span>
+                <span>Rest</span>
+              </div>
+              <div class="flex items-center gap-2 cursor-pointer hover:opacity-75" onclick="highlightActivitySeries('goal')">
+                <span class="w-2 h-2 rounded-full bg-slate-200 inline-block"></span>
+                <span>Daily Goal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT CARD: MEAL STATISTIC (5 Columns) -->
+          <div class="stagger-card stagger-3 col-span-12 lg:col-span-5 bg-[#35ae69] rounded-[20px] relative overflow-hidden flex flex-col justify-between text-white shadow-[0_12px_28px_-10px_rgba(53,174,105,0.45)] min-h-[295px]">
+            <!-- Top Padding Content -->
+            <div class="p-6 pb-0 z-10">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-[13.5px] font-medium text-white/95">Meal Statistic</h3>
+                <div class="relative">
+                  <select
+                    id="meal-date-select"
+                    onchange="updateMealDate(this.value)"
+                    class="appearance-none bg-transparent pr-4 text-[11.5px] text-white/90 font-normal cursor-pointer outline-none"
+                  >
+                    <option value="15/11" class="text-brand-navy">15 / 11</option>
+                    <option value="14/11" class="text-brand-navy">14 / 11</option>
+                    <option value="13/11" class="text-brand-navy">13 / 11</option>
+                  </select>
+                  <svg class="w-3 h-3 text-white/90 absolute right-0 top-1 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+              </div>
+
+              <!-- Big Calorie Counter -->
+              <div class="flex items-baseline gap-1.5 mt-1">
+                <span id="meal-kcal-value" class="text-[34px] font-medium tracking-tight leading-none">230</span>
+                <span class="text-[12px] text-white/85 font-normal">kcal</span>
+              </div>
+              <p id="meal-active-label" class="text-[10.5px] text-emerald-100/80 mt-1">Selected: Food (15/11)</p>
+            </div>
+
+            <!-- Interactive Wave SVG Chart + Bottom Category Selector -->
+            <div class="relative w-full h-[165px] mt-auto">
+              <svg id="meal-wave-svg" class="w-full h-full block" viewBox="0 0 260 155" preserveAspectRatio="none">
+                <!-- Deep Dark Green Area Fill under Wave -->
+                <path
+                  id="meal-wave-fill"
+                  d="M0,108 C14,75 24,38 38,38 C53,38 58,76 74,76 C90,76 96,58 110,58 C124,58 131,84 144,84 C157,84 164,46 177,46 C191,46 198,92 215,102 C232,112 246,118 260,124 L260,155 L0,155 Z"
+                  fill="#146735"
+                  class="transition-all duration-500"
+                />
+                <!-- Crisp White Smooth Bezier Curve -->
+                <path
+                  id="meal-wave-line"
+                  d="M0,108 C14,75 24,38 38,38 C53,38 58,76 74,76 C90,76 96,58 110,58 C124,58 131,84 144,84 C157,84 164,46 177,46 C191,46 198,92 215,102 C232,112 246,118 260,124"
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  class="transition-all duration-500"
+                />
+                <!-- Vertical Guide Line from Active Dot to Bottom -->
+                <line id="meal-guide-line" x1="177" y1="46" x2="177" y2="155" stroke="rgba(255,255,255,0.16)" stroke-width="1" stroke-dasharray="2 2" class="transition-all duration-500" />
+                <!-- Glowing Pulse Outer Circle -->
+                <circle id="meal-dot-pulse" cx="177" cy="46" r="8" fill="rgba(255,255,255,0.35)" class="pulse-circle transition-all duration-500" />
+                <!-- Active White Point -->
+                <circle id="meal-dot-main" cx="177" cy="46" r="4.2" fill="#ffffff" class="transition-all duration-500 cursor-pointer" />
+              </svg>
+
+              <!-- Bottom Category Tabs inside Dark Green Area -->
+              <div class="absolute bottom-3.5 inset-x-0 px-5 flex items-center justify-between text-[11px] font-normal z-20">
+                <button onclick="selectMealCategory('Salad', 145, 38, 38)" id="meal-tab-Salad" class="meal-cat-btn text-white/65 hover:text-white transition px-1.5 py-0.5 rounded">Salad</button>
+                <button onclick="selectMealCategory('Juice', 95, 110, 58)" id="meal-tab-Juice" class="meal-cat-btn text-white/65 hover:text-white transition px-1.5 py-0.5 rounded">Juice</button>
+                <button onclick="selectMealCategory('Food', 230, 177, 46)" id="meal-tab-Food" class="meal-cat-btn text-white font-semibold underline decoration-emerald-300 underline-offset-4 transition px-1.5 py-0.5 rounded">Food</button>
+                <button onclick="selectMealCategory('Water', 0, 232, 112)" id="meal-tab-Water" class="meal-cat-btn text-white/65 hover:text-white transition px-1.5 py-0.5 rounded">Water</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. BOTTOM ROW: 3 METRIC CARDS (HEART RATE, ENERGY BURN, SWIMMING) -->
+        <div class="stagger-card stagger-4 grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+          <!-- Card 1: Heart Rate (Green) -->
+          <div onclick="pulseMetricCard(this, 'heart')" class="hover-lift bg-[#37b06c] rounded-[16px] p-4 pb-3.5 text-white relative overflow-hidden cursor-pointer h-[96px] flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between z-10">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <span class="text-[12px] font-medium">Heart Rate</span>
+              </div>
+              <span class="text-[10.5px] font-medium text-white/90">+12%</span>
+            </div>
+
+            <div class="flex items-end justify-between z-10 mt-auto">
+              <div class="flex items-baseline gap-1">
+                <span id="metric-bpm" class="text-[15px] font-bold">75</span>
+                <span class="text-[10px] text-white/85 uppercase">BPM</span>
+              </div>
+            </div>
+
+            <!-- Bottom-Right Mini Wave Sparkline with Dark Green Fill -->
+            <svg class="absolute right-0 bottom-0 w-[118px] h-[48px]" viewBox="0 0 120 48" preserveAspectRatio="none">
+              <path d="M4,42 C16,42 22,28 32,28 C42,28 46,36 55,36 C65,36 72,13 83,13 C94,13 102,32 120,38 L120,48 L4,48 Z" fill="#146735" />
+              <path class="sparkline-path" d="M4,42 C16,42 22,28 32,28 C42,28 46,36 55,36 C65,36 72,13 83,13 C94,13 102,32 120,38" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="83" cy="13" r="2.5" fill="#ffffff" />
+            </svg>
+          </div>
+
+          <!-- Card 2: Energy Burn (Dark Navy) -->
+          <div onclick="pulseMetricCard(this, 'energy')" class="hover-lift bg-brand-navy rounded-[16px] p-4 pb-3.5 text-white relative overflow-hidden cursor-pointer h-[96px] flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between z-10">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+                <span class="text-[12px] font-medium">Energy Burn</span>
+              </div>
+              <span class="text-[10.5px] font-medium text-white/90">+18%</span>
+            </div>
+
+            <div class="flex items-end justify-between z-10 mt-auto">
+              <div class="flex items-baseline gap-1">
+                <span id="metric-kcal" class="text-[15px] font-bold">120</span>
+                <span class="text-[10px] text-white/80">kcal</span>
+              </div>
+            </div>
+
+            <!-- Bottom-Right Mini Wave Sparkline -->
+            <svg class="absolute right-0 bottom-0 w-[118px] h-[48px]" viewBox="0 0 120 48" preserveAspectRatio="none">
+              <path d="M4,42 C16,42 22,28 32,28 C42,28 46,36 55,36 C65,36 72,13 83,13 C94,13 102,32 120,38 L120,48 L4,48 Z" fill="rgba(255,255,255,0.06)" />
+              <path class="sparkline-path" d="M4,42 C16,42 22,28 32,28 C42,28 46,36 55,36 C65,36 72,13 83,13 C94,13 102,32 120,38" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="83" cy="13" r="2.5" fill="#ffffff" />
+            </svg>
+          </div>
+
+          <!-- Card 3: Swimming (Dark Navy) -->
+          <div onclick="pulseMetricCard(this, 'swim')" class="hover-lift bg-brand-navy rounded-[16px] p-4 pb-3.5 text-white relative overflow-hidden cursor-pointer h-[96px] flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between z-10">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="16" cy="7" r="2"></circle>
+                  <path d="M4 13c2.5 0 4.5-2 7-2s4.5 2 7 2"></path>
+                  <path d="M4 17c2.5 0 4.5-2 7-2s4.5 2 7 2"></path>
+                  <path d="M9 11l3-3 3 2"></path>
+                </svg>
+                <span class="text-[12px] font-medium">Swimming</span>
+              </div>
+              <span class="text-[10.5px] font-medium text-white/90">+30%</span>
+            </div>
+
+            <div class="flex items-end justify-between z-10 mt-auto">
+              <div class="flex items-baseline gap-1">
+                <span id="metric-swim" class="text-[15px] font-bold">01</span>
+                <span class="text-[10px] text-white/80">hrs</span>
+              </div>
+            </div>
+
+            <!-- Bottom-Right Mini Wave Sparkline -->
+            <svg class="absolute right-0 bottom-0 w-[118px] h-[48px]" viewBox="0 0 120 48" preserveAspectRatio="none">
+              <path d="M4,42 C16,42 22,28 32,28 C42,28 46,36 55,36 C65,36 72,13 83,13 C94,13 102,32 120,38 L120,48 L4,48 Z" fill="rgba(255,255,255,0.06)" />
+              <path class="sparkline-path" d="M4,42 C16,42 22,28 32,28 C42,28 46,36 55,36 C65,36 72,13 83,13 C94,13 102,32 120,38" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="83" cy="13" r="2.5" fill="#ffffff" />
+            </svg>
+          </div>
+
+        </div>
+
+        <!-- 4. EXTRA SCROLLABLE DASHBOARD SECTION BELOW THE FOLD -->
+        <div class="stagger-card stagger-5 bg-white rounded-[20px] p-5 shadow-[0_10px_30px_-12px_rgba(27,34,70,0.05)] border border-emerald-50">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-[14px] font-bold text-brand-navy">Today's Recommended Yoga & Recovery</h3>
+              <p class="text-[11px] text-slate-400">Scroll ke bawah atau klik mulai untuk latihan langsung</p>
+            </div>
+            <button onclick="switchMenu('yoga', 2)" class="text-[11.5px] font-semibold text-brand-sidebar hover:underline flex items-center gap-1">
+              Lihat Semua Pose
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-[#f3faf6] hover:bg-[#e4f5ec] transition cursor-pointer" onclick="startQuickWorkout('Warrior II Flow (Virabhadrasana)', 15)">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-sidebar text-white flex items-center justify-center font-bold text-xs">01</div>
+                <div>
+                  <h4 class="text-[12.5px] font-semibold text-brand-navy">Warrior II Side Reach</h4>
+                  <p class="text-[11px] text-slate-400">15 Mins • 85 kcal • Core & Hip</p>
+                </div>
+              </div>
+              <span class="text-[11px] font-semibold bg-white text-brand-sidebar px-3 py-1.5 rounded-xl shadow-sm">Mulai</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-[#f3faf6] hover:bg-[#e4f5ec] transition cursor-pointer" onclick="startQuickWorkout('Evening Pranayama Breathwork', 10)">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-navy text-white flex items-center justify-center font-bold text-xs">02</div>
+                <div>
+                  <h4 class="text-[12.5px] font-semibold text-brand-navy">Evening Pranayama</h4>
+                  <p class="text-[11px] text-slate-400">10 Mins • 35 kcal • Relaxation</p>
+                </div>
+              </div>
+              <span class="text-[11px] font-semibold bg-white text-brand-navy px-3 py-1.5 rounded-xl shadow-sm">Mulai</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- MENU 2: SCHEDULE (SCROLLABLE TIMELINE & BOOKING)      -->
+      <!-- ===================================================== -->
+      <section id="section-schedule" class="menu-section space-y-5 pb-8">
+
+        <!-- Weekly Day Strip + Add Class Button -->
+        <div class="stagger-card stagger-1 bg-white rounded-[20px] p-5 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-[15px] font-bold text-brand-navy">Weekly Class & Training Schedule</h2>
+              <p class="text-[11.5px] text-slate-400">Pilih hari untuk melihat sesi latihan atau tambahkan jadwal baru</p>
+            </div>
+            <button onclick="toggleScheduleForm()" class="bg-brand-sidebar hover:bg-[#38a163] text-white text-[12px] font-medium px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Tambah Jadwal
+            </button>
+          </div>
+
+          <!-- 7 Day Selector Pills -->
+          <div id="schedule-days-strip" class="grid grid-cols-7 gap-2.5">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Collapsible New Schedule Form -->
+          <div id="new-schedule-form" class="hidden mt-4 pt-4 border-t border-slate-100">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <input id="sched-title-input" type="text" placeholder="Nama Sesi (mis: Hot Vinyasa)" class="col-span-1 sm:col-span-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-brand-navy outline-none focus:border-brand-sidebar" />
+              <input id="sched-time-input" type="text" placeholder="Waktu (mis: 07:30 AM)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-brand-navy outline-none focus:border-brand-sidebar" />
+              <select id="sched-cat-input" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-brand-navy outline-none focus:border-brand-sidebar">
+                <option value="Yoga">Yoga Flow</option>
+                <option value="Swimming">Swimming</option>
+                <option value="Meditation">Meditation</option>
+                <option value="Strength">Core Strength</option>
+              </select>
+            </div>
+            <div class="flex justify-end gap-2 mt-3">
+              <button onclick="toggleScheduleForm()" class="text-xs text-slate-400 hover:text-slate-600 px-3 py-1.5">Batal</button>
+              <button onclick="addNewScheduleItem()" class="bg-brand-navy text-white text-xs font-medium px-4 py-1.5 rounded-xl hover:opacity-90">Simpan ke Jadwal</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div class="stagger-card stagger-2 flex items-center gap-2 overflow-x-auto pb-1">
+          <button onclick="filterScheduleList('All')" class="sched-filter-btn bg-brand-sidebar text-white text-xs font-medium px-4 py-1.5 rounded-full transition" data-cat="All">Semua Sesi (9)</button>
+          <button onclick="filterScheduleList('Yoga')" class="sched-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-cat="Yoga">Yoga</button>
+          <button onclick="filterScheduleList('Swimming')" class="sched-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-cat="Swimming">Swimming</button>
+          <button onclick="filterScheduleList('Meditation')" class="sched-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-cat="Meditation">Meditation</button>
+          <button onclick="filterScheduleList('Strength')" class="sched-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-cat="Strength">Core Strength</button>
+        </div>
+
+        <!-- Long Scrollable Schedule List -->
+        <div id="schedule-timeline-list" class="stagger-card stagger-3 space-y-3.5">
+          <!-- Populated by JS -->
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- MENU 3: YOGA (INTERACTIVE BREATHING & 10+ POSES)      -->
+      <!-- ===================================================== -->
+      <section id="section-yoga" class="menu-section space-y-5 pb-8">
+
+        <!-- Live Active Session & Breathing Guide Banner -->
+        <div class="stagger-card stagger-1 bg-gradient-to-r from-[#34ad68] to-[#19723e] rounded-[22px] p-6 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-5">
+          <div class="space-y-1.5">
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-0.5 rounded-full text-[11px] font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-200 animate-ping"></span>
+              <span id="active-yoga-status">Interactive Yoga Studio</span>
+            </div>
+            <h2 id="active-yoga-title" class="text-[19px] font-bold">Sun Salutation & Side Reach (Surya Namaskar)</h2>
+            <p id="active-yoga-subtitle" class="text-[12px] text-emerald-100/90 max-w-md">Ikuti ritme lingkaran pernapasan di sebelah kanan: Tarik napas 4 detik, tahan, dan hembuskan perlahan.</p>
+
+            <div class="pt-2 flex items-center gap-3">
+              <button id="yoga-timer-btn" onclick="toggleYogaSessionTimer()" class="bg-white text-brand-darkGreen font-semibold text-xs px-5 py-2.5 rounded-xl shadow hover:bg-emerald-50 transition flex items-center gap-2">
+                <span id="yoga-timer-btn-text">Mulai Timer Latihan</span>
+              </button>
+              <button onclick="resetYogaSessionTimer()" class="bg-white/15 hover:bg-white/25 text-white text-xs px-3.5 py-2.5 rounded-xl transition">Reset</button>
+            </div>
+          </div>
+
+          <!-- Animated Breathing Lotus & Countdown Ring -->
+          <div class="flex flex-col items-center justify-center shrink-0">
+            <div class="relative w-28 h-28 flex items-center justify-center">
+              <div class="absolute inset-0 rounded-full bg-white/20 breathe-anim"></div>
+              <div class="relative z-10 w-22 h-22 rounded-full bg-white/15 backdrop-blur-sm border-2 border-white/60 flex flex-col items-center justify-center p-4">
+                <span id="yoga-timer-display" class="text-[20px] font-bold tracking-wider">15:00</span>
+                <span id="yoga-breath-cue" class="text-[10px] uppercase tracking-widest text-emerald-100">Inhale</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Yoga Difficulty Filter Tabs -->
+        <div class="stagger-card stagger-2 flex items-center gap-2 overflow-x-auto pb-1">
+          <button onclick="filterYogaPoses('All')" class="yoga-filter-btn bg-brand-navy text-white text-xs font-medium px-4 py-1.5 rounded-full transition" data-level="All">Semua Pose (10)</button>
+          <button onclick="filterYogaPoses('Beginner')" class="yoga-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-level="Beginner">Beginner</button>
+          <button onclick="filterYogaPoses('Intermediate')" class="yoga-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-level="Intermediate">Intermediate</button>
+          <button onclick="filterYogaPoses('Advanced')" class="yoga-filter-btn bg-white text-slate-500 hover:text-brand-navy text-xs font-medium px-4 py-1.5 rounded-full transition" data-level="Advanced">Advanced</button>
+        </div>
+
+        <!-- Scrollable 10+ Yoga Pose Cards Grid -->
+        <div id="yoga-poses-grid" class="stagger-card stagger-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by JS -->
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- MENU 4: MEALS (MACRO TRACKER & SCROLLABLE RECIPES)    -->
+      <!-- ===================================================== -->
+      <section id="section-meals" class="menu-section space-y-5 pb-8">
+
+        <!-- Macro Summary Cards -->
+        <div class="stagger-card stagger-1 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-b-4 border-brand-sidebar">
+            <span class="text-[11px] text-slate-400">Total Calories</span>
+            <div class="text-[20px] font-bold text-brand-navy mt-0.5"><span id="meals-total-kcal">1,420</span> <small class="text-xs font-normal text-slate-400">/ 1,850</small></div>
+            <div class="w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
+              <div id="meals-kcal-bar" class="h-full bg-brand-sidebar rounded-full transition-all duration-500" style="width: 76%;"></div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-b-4 border-brand-navy">
+            <span class="text-[11px] text-slate-400">Protein</span>
+            <div class="text-[20px] font-bold text-brand-navy mt-0.5"><span id="meals-total-protein">84</span>g <small class="text-xs font-normal text-slate-400">/ 110g</small></div>
+            <div class="w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
+              <div class="h-full bg-brand-navy rounded-full" style="width: 74%;"></div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-b-4 border-amber-400">
+            <span class="text-[11px] text-slate-400">Clean Carbs</span>
+            <div class="text-[20px] font-bold text-brand-navy mt-0.5">148g <small class="text-xs font-normal text-slate-400">/ 190g</small></div>
+            <div class="w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
+              <div class="h-full bg-amber-400 rounded-full" style="width: 78%;"></div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-b-4 border-sky-400">
+            <span class="text-[11px] text-slate-400">Hydration</span>
+            <div class="text-[20px] font-bold text-brand-navy mt-0.5"><span id="meals-water-glasses">6</span> <small class="text-xs font-normal text-slate-400">/ 8 Cups</small></div>
+            <button onclick="addWaterGlass()" class="mt-1.5 text-[10.5px] font-semibold text-sky-600 bg-sky-50 hover:bg-sky-100 px-2.5 py-0.5 rounded-lg transition">+ Minum 1 Gelas</button>
+          </div>
+        </div>
+
+        <!-- Custom Meal Log Bar -->
+        <div class="stagger-card stagger-2 bg-[#d3f0df] rounded-[18px] p-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-[13.5px] font-bold text-brand-navy">Catat Makanan / Minuman Cepat</h3>
+            <p class="text-[11px] text-[#3a9964]">Otomatis memperbarui statistik kalori Dashboard & target bulanan</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="quick-meal-name" type="text" placeholder="Nama menu (mis: Matcha Oat)" class="bg-white rounded-xl px-3 py-2 text-xs text-brand-navy outline-none w-44" />
+            <input id="quick-meal-kcal" type="number" placeholder="kcal" class="bg-white rounded-xl px-3 py-2 text-xs text-brand-navy outline-none w-20" />
+            <button onclick="logQuickCustomMeal()" class="bg-brand-sidebar hover:bg-brand-darkGreen text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm">+ Catat</button>
+          </div>
+        </div>
+
+        <!-- Scrollable Healthy Meals & Recipes List (9+ items) -->
+        <div id="meals-list-container" class="stagger-card stagger-3 space-y-3">
+          <!-- Populated by JS -->
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- MENU 5: CHAT (TRAINER & COMMUNITY MESSENGER)          -->
+      <!-- ===================================================== -->
+      <section id="section-chat" class="menu-section space-y-4 pb-6">
+
+        <!-- Contact Switcher Header -->
+        <div class="stagger-card stagger-1 bg-white rounded-[20px] p-3.5 shadow-sm flex items-center justify-between gap-2 overflow-x-auto">
+          <div class="flex items-center gap-2">
+            <button onclick="switchChatContact('janee')" id="chat-tab-janee" class="chat-contact-tab flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#dff5e8] text-brand-navy font-semibold text-xs transition">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-sidebar"></span>
+              <span>Janee Mortensen (Trainer)</span>
+            </button>
+            <button onclick="switchChatContact('club')" id="chat-tab-club" class="chat-contact-tab flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium text-xs transition">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <span>Mindful Yoga Club (24)</span>
+            </button>
+            <button onclick="switchChatContact('sarah')" id="chat-tab-sarah" class="chat-contact-tab flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-medium text-xs transition">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+              <span>Dr. Sarah (Nutritionist)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Box Container -->
+        <div class="stagger-card stagger-2 bg-white rounded-[22px] shadow-sm flex flex-col h-[515px] overflow-hidden border border-slate-100">
+          <!-- Active Chat Partner Top Bar -->
+          <div class="px-5 py-3.5 bg-[#f8fbf9] border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-brand-sidebar/20 text-brand-sidebar flex items-center justify-center font-bold text-sm" id="chat-active-avatar">JM</div>
+              <div>
+                <h3 id="chat-active-name" class="text-[13.5px] font-bold text-brand-navy">Janee Mortensen</h3>
+                <p id="chat-active-role" class="text-[11px] text-brand-sidebar font-medium">Personal Yoga Trainer • Online</p>
+              </div>
+            </div>
+            <span class="text-[11px] text-slate-400">Riwayat pesan dapat di-scroll</span>
+          </div>
+
+          <!-- Scrollable Messages Stream -->
+          <div id="chat-messages-stream" class="custom-scroll flex-1 p-5 space-y-4 bg-[#fcfefd]">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Quick Reply Chips -->
+          <div class="px-4 py-2 bg-slate-50/70 border-t border-slate-100 flex items-center gap-2 overflow-x-auto">
+            <button onclick="sendQuickChat('Apakah postur Warrior II saya sudah benar?')" class="shrink-0 text-[11px] bg-white hover:bg-emerald-50 text-brand-navy border border-slate-200 px-3 py-1 rounded-full transition">Postur Warrior II?</button>
+            <button onclick="sendQuickChat('Saya sudah menyelesaikan target minum air hari ini!')" class="shrink-0 text-[11px] bg-white hover:bg-emerald-50 text-brand-navy border border-slate-200 px-3 py-1 rounded-full transition">Target air selesai!</button>
+            <button onclick="sendQuickChat('Boleh minta rekomendasi menu makan malam rendah kalori?')" class="shrink-0 text-[11px] bg-white hover:bg-emerald-50 text-brand-navy border border-slate-200 px-3 py-1 rounded-full transition">Menu makan malam?</button>
+          </div>
+
+          <!-- Message Input Bar -->
+          <form onsubmit="handleChatSubmit(event)" class="p-3.5 bg-white border-t border-slate-100 flex items-center gap-2.5">
+            <input
+              id="chat-input-field"
+              type="text"
+              placeholder="Tulis pesan untuk pelatih..."
+              class="min-w-0 flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-brand-navy outline-none focus:border-brand-sidebar"
+            />
+            <button type="submit" class="bg-brand-sidebar hover:bg-brand-darkGreen text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+              <span>Kirim</span>
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- MENU 6: PROFILE (SETTINGS, BADGES & WORKOUT LOG)      -->
+      <!-- ===================================================== -->
+      <section id="section-profile" class="menu-section space-y-5 pb-8">
+
+        <!-- Editable Profile Card -->
+        <div class="stagger-card stagger-1 bg-white rounded-[20px] p-6 shadow-sm">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl overflow-hidden bg-[#d3f0df] border-2 border-brand-sidebar shrink-0">
+                <img src="./assets/images/trainer.jpg" alt="" class="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h2 id="profile-display-name" class="text-[17px] font-bold text-brand-navy">Janee Mortensen</h2>
+                <p id="profile-display-role" class="text-[12px] text-brand-sidebar font-medium">Certified Yoga & Mobility Trainer • Pro Member</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Mataram Wellness Studio • Joined Nov 2019</p>
+              </div>
+            </div>
+            <button onclick="saveProfileChanges()" class="bg-brand-sidebar hover:bg-brand-darkGreen text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-sm">
+              Simpan Perubahan Profil
+            </button>
+          </div>
+
+          <!-- Form Inputs that live-update the Right Sidebar -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5">
+            <div>
+              <label class="text-[11px] font-medium text-slate-400 block mb-1">Full Name</label>
+              <input id="input-prof-name" type="text" value="Janee Mortensen" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-medium text-brand-navy outline-none focus:border-brand-sidebar" />
+            </div>
+            <div>
+              <label class="text-[11px] font-medium text-slate-400 block mb-1">Height (Feet)</label>
+              <input id="input-prof-height" type="text" value="5.3 F" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-medium text-brand-navy outline-none focus:border-brand-sidebar" />
+            </div>
+            <div>
+              <label class="text-[11px] font-medium text-slate-400 block mb-1">Weight (Kg) & Age</label>
+              <div class="flex gap-2">
+                <input id="input-prof-weight" type="text" value="75 K" class="w-1/2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-brand-navy outline-none focus:border-brand-sidebar" />
+                <input id="input-prof-age" type="text" value="25 Y" class="w-1/2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-brand-navy outline-none focus:border-brand-sidebar" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unlocked Fitness & Mindfulness Badges -->
+        <div class="stagger-card stagger-2 bg-white rounded-[20px] p-6 shadow-sm">
+          <h3 class="text-[14.5px] font-bold text-brand-navy mb-3.5">Unlocked Yoga & Fitness Achievements</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div class="p-3.5 rounded-2xl bg-[#f2fbf6] border border-emerald-100 text-center">
+              <div class="w-10 h-10 mx-auto rounded-xl bg-brand-sidebar text-white flex items-center justify-center font-bold text-sm mb-2">7D</div>
+              <div class="text-xs font-bold text-brand-navy">7-Day Lotus Streak</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Completed Nov 15</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#f2fbf6] border border-emerald-100 text-center">
+              <div class="w-10 h-10 mx-auto rounded-xl bg-brand-navy text-white flex items-center justify-center font-bold text-sm mb-2">50L</div>
+              <div class="text-xs font-bold text-brand-navy">Hydration Master</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">50 Liters Logged</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#f2fbf6] border border-emerald-100 text-center">
+              <div class="w-10 h-10 mx-auto rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-sm mb-2">1K</div>
+              <div class="text-xs font-bold text-brand-navy">Calorie Torch</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">1,200+ kcal Week</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#f2fbf6] border border-emerald-100 text-center">
+              <div class="w-10 h-10 mx-auto rounded-xl bg-sky-500 text-white flex items-center justify-center font-bold text-sm mb-2">ZEN</div>
+              <div class="text-xs font-bold text-brand-navy">Pranayama Pro</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">92 hrs Restful Sleep</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrollable Preferences & Activity Log -->
+        <div class="stagger-card stagger-3 bg-white rounded-[20px] p-6 shadow-sm space-y-4">
+          <h3 class="text-[14.5px] font-bold text-brand-navy">Smart Reminders & Device Sync</h3>
+
+          <div class="flex items-center justify-between py-2 border-b border-slate-100">
+            <div>
+              <div class="text-xs font-semibold text-brand-navy">Apple Watch / Garmin Heart Rate Sync</div>
+              <div class="text-[11px] text-slate-400">Sinkronisasi detak jantung (75 BPM) secara real-time</div>
+            </div>
+            <input type="checkbox" checked class="w-4 h-4 accent-brand-sidebar cursor-pointer" onchange="showToast('Sinkronisasi perangkat diperbarui!')" />
+          </div>
+
+          <div class="flex items-center justify-between py-2 border-b border-slate-100">
+            <div>
+              <div class="text-xs font-semibold text-brand-navy">Pengingat Minum Air Setiap 2 Jam</div>
+              <div class="text-[11px] text-slate-400">Membantu mencapai target 160 liter bulanan</div>
+            </div>
+            <input type="checkbox" checked class="w-4 h-4 accent-brand-sidebar cursor-pointer" onchange="showToast('Pengingat hidrasi diperbarui!')" />
+          </div>
+
+          <div class="flex items-center justify-between py-2">
+            <div>
+              <div class="text-xs font-semibold text-brand-navy">Mode Tenang Saat Sesi Meditasi</div>
+              <div class="text-[11px] text-slate-400">Senyapkan notifikasi chat ketika timer yoga berjalan</div>
+            </div>
+            <input type="checkbox" class="w-4 h-4 accent-brand-sidebar cursor-pointer" onchange="showToast('Pengaturan mode tenang disimpan!')" />
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- 3. RIGHT SIDEBAR (SOFT MINT GREEN)         -->
+    <!-- ========================================== -->
+    <aside class="right-sidebar-panel bg-brand-mintBg h-full px-6 py-7 flex flex-col justify-between custom-scroll select-none relative z-20">
+
+      <!-- Top Action Bar: Logout + Notification Bell -->
+      <div>
+        <div class="flex items-center justify-between mb-7">
+          <button onclick="showToast('Anda berhasil keluar dari sesi latihan (Demo Mode)')" class="flex items-center gap-2.5 text-[12.5px] font-medium text-brand-navy hover:text-brand-sidebar transition group">
+            <span>Logout</span>
+            <span class="w-5 h-5 rounded-full border border-brand-sidebar/60 text-brand-sidebar flex items-center justify-center group-hover:translate-x-0.5 transition">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          <button onclick="toggleNotifPopover()" class="relative text-brand-sidebar hover:scale-110 transition p-1" title="Notifications">
+            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-500"></span>
+          </button>
+        </div>
+
+        <!-- Notification Popover -->
+        <div id="notif-popover" class="hidden mb-4 bg-white rounded-2xl p-3.5 shadow-lg border border-emerald-100 text-[11px] space-y-2">
+          <div class="font-bold text-brand-navy flex justify-between items-center">
+            <span>Notifikasi Terbaru</span>
+            <button onclick="toggleNotifPopover()" class="text-slate-400 hover:text-brand-navy">✕</button>
+          </div>
+          <div class="p-2 rounded-xl bg-[#f2fbf6] text-brand-navy">🧘‍♀️ <b>Vinyasa Flow</b> dimulai dalam 30 menit.</div>
+          <div class="p-2 rounded-xl bg-[#f2fbf6] text-brand-navy">💧 Jangan lupa minum air pukul 5:00 PM!</div>
+        </div>
+
+        <!-- Profile Avatar & Name -->
+        <div class="flex flex-col items-center text-center mb-6">
+          <button type="button" aria-label="Buka profil" onclick="switchMenu('profile', 5)" class="w-[82px] h-[82px] rounded-[18px] overflow-hidden shadow-md mb-3.5 bg-[#cbd5e1] ring-4 ring-white/60 hover:scale-105 transition">
+            <img src="./assets/images/trainer.jpg" alt="" class="w-full h-full object-cover" />
+          </button>
+          <h3 id="sidebar-prof-name" class="text-[14px] font-bold text-brand-navy">Janee Mortensen</h3>
+          <p class="text-[12px] font-medium text-[#55b97f] mt-0.5">Trainer</p>
+
+          <!-- 3-Column Biometric Stats (Height, Weight, Age) -->
+          <div class="grid grid-cols-3 w-full mt-5 pt-1 text-center divide-x divide-emerald-600/15">
+            <div class="px-1">
+              <div id="sidebar-prof-height" class="text-[12.5px] font-bold text-brand-navy">5.3 F</div>
+              <div class="text-[10.5px] text-[#55b97f] mt-0.5">Height</div>
+            </div>
+            <div class="px-1">
+              <div id="sidebar-prof-weight" class="text-[12.5px] font-bold text-brand-navy">75 K</div>
+              <div class="text-[10.5px] text-[#55b97f] mt-0.5">Weight</div>
+            </div>
+            <div class="px-1">
+              <div id="sidebar-prof-age" class="text-[12.5px] font-bold text-brand-navy">25 Y</div>
+              <div class="text-[10.5px] text-[#55b97f] mt-0.5">Age</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YOUR MONTHLY GOALS -->
+        <div class="mb-7">
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-[14px] font-bold text-brand-navy">Your Monthly Goals</h4>
+            <span class="text-[10px] text-[#55b97f] font-medium">Klik bar +</span>
+          </div>
+
+          <!-- Goal 1: Sleep -->
+          <div class="mb-4 cursor-pointer group" onclick="incrementMonthlyGoal('sleep')" title="Klik untuk tambah jam tidur">
+            <div class="flex items-center justify-between text-[11.5px] mb-1.5">
+              <span class="font-medium text-brand-navy group-hover:text-brand-sidebar transition">Sleep</span>
+              <span class="text-[11px]">
+                <strong id="goal-sleep-val" class="font-semibold text-brand-navy">92</strong>
+                <span class="text-[#55b97f]"> / 240 hrs</span>
+              </span>
+            </div>
+            <div class="w-full h-[5px] bg-[#c7ebd6] rounded-full overflow-hidden">
+              <div id="goal-sleep-bar" class="h-full bg-[#41b873] rounded-full transition-all duration-500" style="width: 48%;"></div>
+            </div>
+          </div>
+
+          <!-- Goal 2: Drink Water -->
+          <div class="mb-4 cursor-pointer group" onclick="incrementMonthlyGoal('water')" title="Klik untuk tambah liter air">
+            <div class="flex items-center justify-between text-[11.5px] mb-1.5">
+              <span class="font-medium text-brand-navy group-hover:text-brand-sidebar transition">Drink Water</span>
+              <span class="text-[11px]">
+                <strong id="goal-water-val" class="font-semibold text-brand-navy">50</strong>
+                <span class="text-[#55b97f]"> / 160 ltr</span>
+              </span>
+            </div>
+            <div class="w-full h-[5px] bg-[#c7ebd6] rounded-full overflow-hidden">
+              <div id="goal-water-bar" class="h-full bg-[#41b873] rounded-full transition-all duration-500" style="width: 38%;"></div>
+            </div>
+          </div>
+
+          <!-- Goal 3: Lose Weight -->
+          <div class="cursor-pointer group" onclick="incrementMonthlyGoal('weight')" title="Klik untuk update progres berat badan">
+            <div class="flex items-center justify-between text-[11.5px] mb-1.5">
+              <span class="font-medium text-brand-navy group-hover:text-brand-sidebar transition">Lose Weight</span>
+              <span class="text-[11px]">
+                <strong id="goal-weight-val" class="font-semibold text-brand-navy">4.5</strong>
+                <span class="text-[#55b97f]"> / 5 kg</span>
+              </span>
+            </div>
+            <div class="w-full h-[5px] bg-[#c7ebd6] rounded-full overflow-hidden">
+              <div id="goal-weight-bar" class="h-full bg-[#41b873] rounded-full transition-all duration-500" style="width: 86%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TASK LIST SECTION -->
+        <div>
+          <div class="flex items-center justify-between mb-3.5">
+            <h4 class="text-[14px] font-bold text-brand-navy">Task</h4>
+            <button onclick="addQuickSidebarTask()" class="text-[11px] font-semibold text-brand-sidebar hover:underline">+ Task</button>
+          </div>
+
+          <div id="sidebar-tasks-list" class="space-y-3">
+            <!-- Primary Reference Task -->
+            <div onclick="toggleSidebarTask(this)" class="flex items-center justify-between cursor-pointer group">
+              <div>
+                <div class="text-[12px] font-medium text-brand-navy group-hover:text-brand-sidebar transition task-title">Drinking Water</div>
+                <div class="text-[10.5px] text-[#55b97f] mt-0.5">15/11/ 2019 | 5:00 pm</div>
+              </div>
+              <div class="task-check w-[18px] h-[18px] rounded-[5px] bg-[#41b873] text-white flex items-center justify-center transition shadow-sm">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Extra Scrollable Tasks in Right Sidebar -->
+            <div onclick="toggleSidebarTask(this)" class="flex items-center justify-between cursor-pointer group pt-1 border-t border-emerald-600/10">
+              <div>
+                <div class="text-[12px] font-medium text-brand-navy group-hover:text-brand-sidebar transition task-title">Evening Yoga Stretch</div>
+                <div class="text-[10.5px] text-[#55b97f] mt-0.5">15/11/ 2019 | 6:30 pm</div>
+              </div>
+              <div class="task-check w-[18px] h-[18px] rounded-[5px] bg-white border border-emerald-300 text-transparent flex items-center justify-center transition">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- FLOATING TOAST FEEDBACK MESSAGE BOX -->
+    <div id="toast-box" role="status" class="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-50 opacity-0 translate-y-3 transition-all duration-300 bg-brand-navy text-white text-xs font-medium px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5">
+      <span class="w-2 h-2 rounded-full bg-brand-sidebar"></span>
+      <span id="toast-text"></span>
+    </div>
+
+  </div>
+
+</body>
+</html>

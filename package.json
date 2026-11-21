@@ -1,0 +1,14 @@
+{
+  "name": "yoga-fitness-dashboard",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs && tailwindcss -i src/styles/dashboard.css -o dist/assets/css/dashboard.css --minify"
+  },
+  "devDependencies": {
+    "@fontsource/poppins": "5.3.0",
+    "tailwindcss": "3.4.19"
+  }
+}
